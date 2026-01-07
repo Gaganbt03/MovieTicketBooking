@@ -4,38 +4,34 @@ function goTo(pageId) {
     document.getElementById(pageId).classList.add("active");
 }
 
-let movies = [];
+// SAMPLE MOVIES
+const movies = [
+    { title: "KGF 2", poster: "https://m.media-amazon.com/images/I/81ZbZp5Rt-L.jpg"},
+    { title: "Pushpa 2", poster: "https://m.media-amazon.com/images/I/71tmfvkYVvL.jpg"},
+    { title: "Avatar 2", poster: "https://m.media-amazon.com/images/I/71rXj1VdXWL.jpg"},
+    { title: "Jawan", poster: "https://m.media-amazon.com/images/I/81iKk-FDJWL._SL1500_.jpg"},
+    { title: "Vikram", poster: "https://m.media-amazon.com/images/I/71sSoZihiML.jpg"},
+    { title: "Salar", poster: "https://m.media-amazon.com/images/I/81S0IwWNLkL.jpg"}
+];
+
 let selectedMovie = "";
 let selectedTime = "";
 
-// LOAD MOVIES FROM BACKEND
-fetch("http://localhost:5000/movies")
-    .then(res => res.json())
-    .then(data => {
-        movies = data;
-        displayMovies();
-    })
-    .catch(err => console.error("Backend offline:", err));
+// LOAD MOVIES TO HOME PAGE
+const movieList = document.getElementById("movie-list");
+movies.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "movie-card";
+    div.innerHTML = `
+      <img src="${m.poster}" alt="">
+      <h3>${m.title}</h3>
+      <button>View Showtimes</button>
+    `;
+    div.querySelector("button").onclick = () => pickShowtime(m.title);
+    movieList.appendChild(div);
+});
 
-// DISPLAY MOVIES
-function displayMovies() {
-    const movieList = document.getElementById("movie-list");
-    movieList.innerHTML = "";
-
-    movies.forEach(m => {
-        const div = document.createElement("div");
-        div.className = "movie-card";
-        div.innerHTML = `
-          <img src="${m.poster}" alt="">
-          <h3>${m.title}</h3>
-          <button>View Showtimes</button>
-        `;
-        div.querySelector("button").onclick = () => pickShowtime(m.title);
-        movieList.appendChild(div);
-    });
-}
-
-// SHOWTIMES
+// SHOWTIME PAGE
 function pickShowtime(title) {
     selectedMovie = title;
     goTo("showtimes");
@@ -53,17 +49,18 @@ function pickShowtime(title) {
     });
 }
 
-// SEAT PAGE
+// SEATS PAGE
 function goToSeatSelection(time) {
     selectedTime = time;
     goTo("seats");
 
     document.getElementById("chosenMovieSeat").textContent = selectedMovie;
     document.getElementById("chosenTimeSeat").textContent = selectedTime;
+
     loadSeats();
 }
 
-// BUILD SEATS
+// BUILD SEAT GRID
 function loadSeats() {
     const seatContainer = document.getElementById("seat-container");
     seatContainer.innerHTML = "";
@@ -78,33 +75,17 @@ function loadSeats() {
     }
 }
 
-// UPDATE PRICE
+// UPDATE SEAT COUNT + PRICE
 function updateSummary() {
     const count = document.querySelectorAll(".seat.selected").length;
     document.getElementById("count").textContent = count;
     document.getElementById("total").textContent = count * 150;
 }
 
-// BOOKING --> backend
+// CONFIRM BOOKING
 function confirmBooking() {
-    const selectedSeats = [...document.querySelectorAll(".seat.selected")].map((s, i) => `S${i+1}`);
-
-    fetch("http://localhost:5000/book", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            movie: selectedMovie,
-            time: selectedTime,
-            seats: selectedSeats
-        })
-    })
-        .then(res => res.json())
-        .then(data => {
-            console.log("Booking saved:", data);
-            document.getElementById("summaryText").textContent =
-                `${selectedMovie} at ${selectedTime} — ${selectedSeats.length} seats booked!`;
-            goTo("summary");
-        })
-        .catch(err => alert("Backend not running 😢"));
+    const seatCount = document.querySelectorAll(".seat.selected").length;
+    document.getElementById("summaryText").textContent =
+        `${selectedMovie} at ${selectedTime} — ${seatCount} seat(s) booked successfully! 🎉`;
+    goTo("summary");
 }
-
