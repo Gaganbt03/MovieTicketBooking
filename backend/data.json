@@ -1,0 +1,11 @@
+{
+  "movies": [
+    { "title": "Avatar 2" },
+    { "title": "KGF 2" },
+    { "title": "Jawan" },
+    { "title": "Pushpa 2" },
+    { "title": "Vikram" },
+    { "title": "Salar" }
+  ],
+  "bookings": {}
+}
