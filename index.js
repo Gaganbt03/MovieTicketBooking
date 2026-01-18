@@ -1,91 +1,217 @@
-// PAGE NAVIGATION
-function goTo(pageId) {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    document.getElementById(pageId).classList.add("active");
-}
+// ========= DOM ELEMENTS =========
+const menuBtn = document.getElementById("menuBtn");
+const navLinks = document.getElementById("navLinks");
+const slider = document.getElementById("slider");
+const dotsContainer = document.getElementById("dots");
+const prev = document.getElementById("prev");
+const next = document.getElementById("next");
 
-// SAMPLE MOVIES
+const movieList = document.getElementById("movieList");
+const selectedMovieBanner = document.getElementById("selectedMovieBanner");
+const seats = document.getElementById("seats");
+const seatGrid = document.getElementById("seatGrid");
+const summary = document.getElementById("summary");
+
+const checkoutBtn = document.getElementById("checkoutBtn");
+const checkout = document.getElementById("checkout");
+const step1 = document.getElementById("step1");
+const step2 = document.getElementById("step2");
+const nextStep = document.getElementById("nextStep");
+const payBtn = document.getElementById("payBtn");
+
+const successModal = document.getElementById("success-modal");
+const ticketText = document.getElementById("ticketText");
+const downloadBtn = document.getElementById("downloadBtn");
+const homeBtn = document.getElementById("homeBtn");
+
+const inputName = document.getElementById("name");
+const inputEmail = document.getElementById("email");
+const inputCard = document.getElementById("card");
+const bankSelect = document.getElementById("bank");
+
+const dot1 = document.getElementById("dot1");
+const dot2 = document.getElementById("dot2");
+
+
+// ========= MOVIES =========
 const movies = [
-    { title: "KGF 2", poster: "https://m.media-amazon.com/images/I/81ZbZp5Rt-L.jpg"},
-    { title: "Pushpa 2", poster: "https://m.media-amazon.com/images/I/71tmfvkYVvL.jpg"},
-    { title: "Avatar 2", poster: "https://m.media-amazon.com/images/I/71rXj1VdXWL.jpg"},
-    { title: "Jawan", poster: "https://m.media-amazon.com/images/I/81iKk-FDJWL._SL1500_.jpg"},
-    { title: "Vikram", poster: "https://m.media-amazon.com/images/I/71sSoZihiML.jpg"},
-    { title: "Salar", poster: "https://m.media-amazon.com/images/I/81S0IwWNLkL.jpg"}
+  { id:1,title:"Avengers Endgame",poster:"https://image.tmdb.org/t/p/original/ulzhLuWrPK07P1YkdWQLZnQh1JL.jpg",genre:["Action"],rating:4.8,times:["10AM","1PM","4PM"],price:250},
+  { id:2,title:"Interstellar",poster:"https://image.tmdb.org/t/p/original/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",genre:["Sci-Fi"],rating:4.7,times:["11AM","2PM","5PM"],price:260},
+  { id:3,title:"Inception",poster:"https://image.tmdb.org/t/p/original/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg",genre:["Thriller"],rating:4.9,times:["9AM","1PM","7PM"],price:240},
+  { id:4,title:"Joker",poster:"https://image.tmdb.org/t/p/original/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg",genre:["Drama"],rating:4.6,times:["11AM","3PM","6PM"],price:220},
+  { id:5,title:"The Dark Knight",poster:"https://image.tmdb.org/t/p/original/qJ2tW6WMUDux911r6m7haRef0WH.jpg",genre:["Action"],rating:4.9,times:["10AM","4PM","8PM"],price:270},
+  { id:6,title:"Spider-Man No Way Home",poster:"https://image.tmdb.org/t/p/original/5weKu49pzJCt06OPpjvT80efnQj.jpg",genre:["Action"],rating:4.4,times:["2PM","6PM","9PM"],price:260}
 ];
 
-let selectedMovie = "";
-let selectedTime = "";
 
-// LOAD MOVIES TO HOME PAGE
-const movieList = document.getElementById("movie-list");
-movies.forEach(m => {
-    const div = document.createElement("div");
-    div.className = "movie-card";
-    div.innerHTML = `
-      <img src="${m.poster}" alt="">
-      <h3>${m.title}</h3>
-      <button>View Showtimes</button>
-    `;
-    div.querySelector("button").onclick = () => pickShowtime(m.title);
-    movieList.appendChild(div);
+// ========= NAV MENU =========
+menuBtn.onclick = () => navLinks.classList.toggle('show');
+
+
+// ========= SLIDER =========
+let current = 0;
+const heroImgs = movies.slice(0,5).map(m => m.poster);
+
+heroImgs.forEach((img, i) => {
+  const div = document.createElement('div');
+  div.className = `slide${i===0?" active":""}`;
+  div.style.backgroundImage = `url(${img})`;
+  slider.appendChild(div);
+
+  const dot = document.createElement('div');
+  dot.className = `dot${i===0?" active":""}`;
+  dot.onclick = () => go(i);
+  dotsContainer.appendChild(dot);
 });
 
-// SHOWTIME PAGE
-function pickShowtime(title) {
-    selectedMovie = title;
-    goTo("showtimes");
+const slides = [...document.querySelectorAll('.slide')];
+const dots = [...document.querySelectorAll('.dot')];
 
-    document.getElementById("chosenMovie").textContent = title;
-    const times = ["10:00 AM", "1:00 PM", "4:00 PM", "8:00 PM"];
-
-    const btns = document.getElementById("timeButtons");
-    btns.innerHTML = "";
-    times.forEach(t => {
-        const b = document.createElement("button");
-        b.textContent = t;
-        b.onclick = () => goToSeatSelection(t);
-        btns.appendChild(b);
-    });
+function go(n){
+  slides[current].classList.remove('active');
+  dots[current].classList.remove('active');
+  current = (n + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
 }
+setInterval(() => go(current + 1), 4000);
+prev.onclick = () => go(current - 1);
+next.onclick = () => go(current + 1);
 
-// SEATS PAGE
-function goToSeatSelection(time) {
-    selectedTime = time;
-    goTo("seats");
 
-    document.getElementById("chosenMovieSeat").textContent = selectedMovie;
-    document.getElementById("chosenTimeSeat").textContent = selectedTime;
+// ========= MOVIE LIST =========
+let selectedMovie = null, selectedTime = null;
+movies.forEach(m=>{
+  const card = document.createElement('div');
+  card.className = 'movie-card';
+  card.innerHTML = `
+    <img src="${m.poster}">
+    <div class="movie-info">
+      <h3>${m.title}</h3>
+      <span>${m.genre} • ⭐${m.rating}</span>
+      <div class="times">
+        ${m.times.map(t=>`<button data-id="${m.id}" data-time="${t}">${t}</button>`).join("")}
+      </div>
+    </div>`;
+  movieList.appendChild(card);
+});
 
-    loadSeats();
-}
+movieList.onclick = e=>{
+  if(e.target.tagName==="BUTTON"){
+    selectedMovie = movies.find(m=>m.id==e.target.dataset.id);
+    selectedTime = e.target.dataset.time;
+    selectedMovieBanner.innerHTML = `Selected: <b>${selectedMovie.title}</b> • ${selectedTime}`;
+    selectedMovieBanner.style.display = 'block';
+    seats.style.display = 'block';
+    window.scrollTo({top: seats.offsetTop - 60, behavior:'smooth'});
+    buildSeats();
+  }
+};
 
-// BUILD SEAT GRID
-function loadSeats() {
-    const seatContainer = document.getElementById("seat-container");
-    seatContainer.innerHTML = "";
-    for (let i = 1; i <= 60; i++) {
-        const seat = document.createElement("div");
-        seat.className = "seat";
-        seat.onclick = () => {
-            seat.classList.toggle("selected");
-            updateSummary();
-        };
-        seatContainer.appendChild(seat);
+
+// ========= SEATS =========
+let selectedSeats = [];
+const rows = 5, cols = 10;
+
+function buildSeats(){
+  seatGrid.innerHTML = "";
+  selectedSeats = [];
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      const seat = document.createElement('div');
+      seat.className = "seat";
+      seat.onclick = ()=>toggleSeat(seat,r,c);
+      seatGrid.appendChild(seat);
     }
+  }
+  updateSummary();
 }
 
-// UPDATE SEAT COUNT + PRICE
-function updateSummary() {
-    const count = document.querySelectorAll(".seat.selected").length;
-    document.getElementById("count").textContent = count;
-    document.getElementById("total").textContent = count * 150;
+function toggleSeat(seat,r,c){
+  seat.classList.toggle('selected');
+  const key = `${r}-${c}`;
+  seat.classList.contains('selected')
+    ? selectedSeats.push(key)
+    : selectedSeats=selectedSeats.filter(s=>s!==key);
+  updateSummary();
 }
 
-// CONFIRM BOOKING
-function confirmBooking() {
-    const seatCount = document.querySelectorAll(".seat.selected").length;
-    document.getElementById("summaryText").textContent =
-        `${selectedMovie} at ${selectedTime} — ${seatCount} seat(s) booked successfully! 🎉`;
-    goTo("summary");
+function updateSummary(){
+  if(!selectedMovie) return;
+  summary.innerHTML =
+    `Seats: <b>${selectedSeats.length}</b> • Total: <b>₹${selectedSeats.length * selectedMovie.price}</b>`;
 }
+
+
+// ========= CHECKOUT =========
+checkoutBtn.onclick = ()=>{
+  if(!selectedSeats.length) return alert("Please select at least 1 seat 😄");
+  seats.style.display="none";
+  checkout.style.display="block";
+  step1.style.display="block";
+  window.scrollTo({top: checkout.offsetTop -60, behavior:"smooth"});
+};
+
+nextStep.onclick = ()=>{
+  if(!inputName.value.trim() || !inputEmail.value.trim()){
+    if(!inputName.value) inputName.classList.add('error');
+    if(!inputEmail.value) inputEmail.classList.add('error');
+    return;
+  }
+  dot1.classList.remove('active');
+  dot2.classList.add('active');
+  step1.style.display="none";
+  step2.style.display="block";
+};
+
+
+// ========= PAYMENT =========
+payBtn.onclick = ()=>{
+  if(!bankSelect.value.trim()) return bankSelect.classList.add('error');
+  if(!inputCard.value.trim()) return inputCard.classList.add('error');
+  showSuccess();
+};
+
+
+// ========= SUCCESS =========
+function showSuccess(){
+  checkout.style.display="none";
+  successModal.style.display="flex";
+  ticketText.innerText=
+    `${selectedMovie.title} • ${selectedTime}
+Seats: ${selectedSeats.length}
+Paid using: ${bankSelect.value}`;
+}
+
+
+// ========= DOWNLOAD =========
+downloadBtn.onclick = ()=>{
+  alert("🎟 Ticket Downloaded Successfully!");
+  reset();
+};
+
+
+// ========= HOME BUTTON =========
+homeBtn.onclick = ()=> reset();
+
+
+// ========= RESET =========
+function reset(){
+  successModal.style.display="none";
+  selectedSeats=[];
+  selectedMovie=null;
+  selectedTime=null;
+  selectedMovieBanner.style.display="none";
+  seats.style.display="none";
+  checkout.style.display="none";
+  seatGrid.innerHTML="";
+  summary.innerHTML="";
+  inputName.value="";
+  inputEmail.value="";
+  inputCard.value="";
+  bankSelect.value="";
+  dot1.classList.add('active');
+  dot2.classList.remove('active');
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
