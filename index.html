@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CinemaX - Book Your Movie</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="index.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CinemaX - Book Your Movie</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
 
 <nav>
@@ -53,14 +55,13 @@
 
   <div class="step" id="step1">
     <h3>Contact Info</h3>
-    <input id="name" type="text" placeholder="Full Name"/>
-    <input id="email" type="email" placeholder="Email"/>
+    <input id="name" type="text" placeholder="Full Name" />
+    <input id="email" type="email" placeholder="Email" />
     <button class="next" id="nextStep">Next</button>
   </div>
 
   <div class="step" id="step2">
     <h3>Payment</h3>
-
     <select id="bank">
       <option value="">Choose Bank</option>
       <option>SBI</option>
@@ -69,20 +70,16 @@
       <option>Canara Bank</option>
       <option>PayTM Wallet</option>
     </select>
-
-    <input id="card" type="text" placeholder="Card Number"/>
-
+    <input id="card" type="text" placeholder="Card Number" />
     <button class="pay" id="payBtn">Pay & Confirm</button>
   </div>
 </section>
 
-<!-- SUCCESS MODAL -->
 <div id="success-modal">
   <div class="modal-box">
     <h3>Booking Confirmed 🎉</h3>
     <p id="ticketText"></p>
 
-    <!-- New Buttons -->
     <div class="modal-buttons">
       <button class="btn" id="downloadBtn">🎟 Download Ticket</button>
       <button class="btn" id="homeBtn">🏠 Back to Home</button>
@@ -93,6 +90,7 @@
 <script src="index.js"></script>
 </body>
 </html>
+
 
 
 
