@@ -214,4 +214,3 @@ function reset(){
   dot2.classList.remove('active');
   window.scrollTo({top:0,behavior:"smooth"});
 }
-
