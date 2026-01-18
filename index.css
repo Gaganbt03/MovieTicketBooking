@@ -21,7 +21,6 @@ h2.title{
   font-weight:700;
 }
 
-
 nav{
   position:sticky;top:0;width:100%;z-index:999;background:rgba(15,23,42,0.65);
   backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:15px 5vw;
@@ -136,12 +135,6 @@ select option{color:black;}
   animation:slideUp .7s;max-width:380px;text-align:center;
 }
 .modal-box h3{color:var(--success);margin-bottom:8px;}
-.download{margin-top:12px;background:var(--success);padding:10px;border-radius:var(--radius);cursor:pointer;border:none;}
-
-@media(max-width:540px){
-  .grid{max-width:90vw;}
-}
-/* KEEP YOUR ENTIRE CSS SAME - ADD THESE 7 LINES */
 
 .modal-buttons{
   display:flex;
@@ -153,5 +146,10 @@ select option{color:black;}
   padding:10px 15px;
   font-size:0.9rem;
 }
+
+@media(max-width:540px){
+  .grid{max-width:90vw;}
+}
+
 
 
