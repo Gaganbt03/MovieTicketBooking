@@ -1,60 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineBook Ticket Booking</title>
-    <link rel="stylesheet" href="index.css">
-    <script defer src="index.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CinemaX - Book Your Movie</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- HOME SECTION -->
-    <section id="home" class="page active">
-        <div class="hero">
-            <h1>Welcome to CineBook 🎥</h1>
-            <p>Book tickets instantly for the latest blockbusters!</p>
-            <button onclick="goTo('movies')">Book Tickets</button>
-        </div>
-    </section>
+<nav>
+  <h1>CinemaX</h1>
+  <button id="menuBtn">☰</button>
+  <ul id="navLinks">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#movies">Movies</a></li>
+    <li><a href="#seats">Seats</a></li>
+  </ul>
+</nav>
 
-    <!-- MOVIES -->
-    <section id="movies" class="page">
-        <h2>Now Showing 🍿</h2>
-        <div id="movie-list" class="movie-grid"></div>
-        <button class="back" onclick="goTo('home')">⬅ Back</button>
-    </section>
+<section id="hero">
+  <div class="slider" id="slider"></div>
+  <div class="hero-content">
+    <h2>Your Movie Journey Starts Here</h2>
+    <p>Pick your show • Choose seats • Enjoy the experience</p>
+  </div>
+  <div class="arrow left" id="prev">❮</div>
+  <div class="arrow right" id="next">❯</div>
+  <div class="dots" id="dots"></div>
+</section>
 
-    <!-- SHOWTIMES -->
-    <section id="showtimes" class="page">
-        <h2 id="chosenMovie"></h2>
-        <p>Select a showtime:</p>
-        <div id="timeButtons"></div>
-        <button class="back" onclick="goTo('movies')">⬅ Back</button>
-    </section>
+<section id="movies">
+  <h2 class="title">Now Showing</h2>
+  <div class="movies-grid" id="movieList"></div>
+  <div class="selected-movie-banner" id="selectedMovieBanner"></div>
+</section>
 
-    <!-- SEATS -->
-    <section id="seats" class="page">
-        <h2 id="chosenMovieSeat"></h2>
-        <p id="chosenTimeSeat"></p>
-        <div class="screen">SCREEN</div>
-        <div id="seat-container" class="seat-grid"></div>
+<section id="seats">
+  <h2 class="title">Choose Your Seats</h2>
+  <div class="screen"></div>
+  <div class="grid" id="seatGrid"></div>
+  <div class="summary" id="summary"></div>
+  <button class="btn" id="checkoutBtn">Continue to Checkout</button>
+</section>
 
-        <div class="summary">
-            <p>Total Seats: <span id="count">0</span></p>
-            <p>Total Price: ₹<span id="total">0</span></p>
-            <button onclick="confirmBooking()">Confirm Booking</button>
-        </div>
+<section id="checkout">
+  <h2 class="title">Checkout</h2>
+  <div class="steps-indicator">
+    <span id="dot1" class="active"></span>
+    <span id="dot2"></span>
+  </div>
 
-        <button class="back" onclick="goTo('showtimes')">⬅ Back</button>
-    </section>
+  <div class="step" id="step1">
+    <h3>Contact Info</h3>
+    <input id="name" type="text" placeholder="Full Name"/>
+    <input id="email" type="email" placeholder="Email"/>
+    <button class="next" id="nextStep">Next</button>
+  </div>
 
-    <!-- SUMMARY -->
-    <section id="summary" class="page">
-        <h2>Booking Confirmed 🎉</h2>
-        <p id="summaryText"></p>
-        <button onclick="goTo('home')">Home</button>
-    </section>
+  <div class="step" id="step2">
+    <h3>Payment</h3>
 
+    <select id="bank">
+      <option value="">Choose Bank</option>
+      <option>SBI</option>
+      <option>HDFC</option>
+      <option>ICICI</option>
+      <option>Canara Bank</option>
+      <option>PayTM Wallet</option>
+    </select>
+
+    <input id="card" type="text" placeholder="Card Number"/>
+
+    <button class="pay" id="payBtn">Pay & Confirm</button>
+  </div>
+</section>
+
+<!-- SUCCESS MODAL -->
+<div id="success-modal">
+  <div class="modal-box">
+    <h3>Booking Confirmed 🎉</h3>
+    <p id="ticketText"></p>
+
+    <!-- New Buttons -->
+    <div class="modal-buttons">
+      <button class="btn" id="downloadBtn">🎟 Download Ticket</button>
+      <button class="btn" id="homeBtn">🏠 Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
+
